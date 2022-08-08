@@ -1,2 +1,11 @@
-﻿global using CodecoolAPI.Data.Context;
+﻿global using AutoMapper;
+global using CodecoolAPI.API.DTO.AuthorDtos;
+global using CodecoolAPI.API.DTO.Pagination;
+global using CodecoolAPI.API.Services.Interfaces;
+global using CodecoolAPI.Data.Context;
+global using CodecoolAPI.Data.DAL.Interfaces;
+global using CodecoolAPI.Data.DAL.Repositories;
+global using CodecoolAPI.Data.Entries;
 global using Microsoft.EntityFrameworkCore;
+global using System.ComponentModel.DataAnnotations;
+global using System.Text.Json.Serialization;
