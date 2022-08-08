@@ -5,7 +5,7 @@ using System;
 
 namespace CodecoolAPI.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Intitial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,9 +13,9 @@ namespace CodecoolAPI.Data.Migrations
                 name: "Authors",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    AuthorId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Username = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -24,28 +24,28 @@ namespace CodecoolAPI.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Authors", x => x.Id);
+                    table.PrimaryKey("PK_Authors", x => x.AuthorId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "MaterialTypes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    MaterialTypeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Definition = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MaterialTypes", x => x.Id);
+                    table.PrimaryKey("PK_MaterialTypes", x => x.MaterialTypeId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Materials",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    MaterialId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -56,18 +56,18 @@ namespace CodecoolAPI.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Materials", x => x.Id);
+                    table.PrimaryKey("PK_Materials", x => x.MaterialId);
                     table.ForeignKey(
                         name: "FK_Materials_Authors_AuthorId",
                         column: x => x.AuthorId,
                         principalTable: "Authors",
-                        principalColumn: "Id",
+                        principalColumn: "AuthorId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Materials_MaterialTypes_MaterialTypeId",
                         column: x => x.MaterialTypeId,
                         principalTable: "MaterialTypes",
-                        principalColumn: "Id",
+                        principalColumn: "MaterialTypeId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -75,22 +75,35 @@ namespace CodecoolAPI.Data.Migrations
                 name: "Reviews",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    ReviewId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RewievTExt = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RewievText = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RevievPoints = table.Column<int>(type: "int", nullable: false),
-                    MaterialId = table.Column<int>(type: "int", nullable: false)
+                    MaterialId = table.Column<int>(type: "int", nullable: false),
+                    AuthorId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reviews", x => x.Id);
+                    table.PrimaryKey("PK_Reviews", x => x.ReviewId);
+                    table.ForeignKey(
+                        name: "FK_Reviews_Authors_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "Authors",
+                        principalColumn: "AuthorId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Reviews_Materials_MaterialId",
                         column: x => x.MaterialId,
                         principalTable: "Materials",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "MaterialId");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Authors_Username",
+                table: "Authors",
+                column: "Username",
+                unique: true,
+                filter: "[Username] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Materials_AuthorId",
@@ -101,6 +114,18 @@ namespace CodecoolAPI.Data.Migrations
                 name: "IX_Materials_MaterialTypeId",
                 table: "Materials",
                 column: "MaterialTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MaterialTypes_Name",
+                table: "MaterialTypes",
+                column: "Name",
+                unique: true,
+                filter: "[Name] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_AuthorId",
+                table: "Reviews",
+                column: "AuthorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_MaterialId",

@@ -2,9 +2,9 @@
 {
     public class MaterialType
     {
-        public int Id { get; set; }
+        public int MaterialTypeId { get; set; }
         public string Name { get; set; }
         public string Definition { get; set; }
-        public IEnumerable<Material> Materials { get; set; } = new List<Material>();
+        public IEnumerable<Material> Materials { get; set; }
     }
 }

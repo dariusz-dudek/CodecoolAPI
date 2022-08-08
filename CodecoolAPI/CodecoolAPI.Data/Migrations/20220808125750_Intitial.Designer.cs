@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodecoolAPI.Data.Migrations
 {
     [DbContext(typeof(CodecoolAPIContext))]
-    [Migration("20220808100800_Initial")]
-    partial class Initial
+    [Migration("20220808125750_Intitial")]
+    partial class Intitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,11 +26,11 @@ namespace CodecoolAPI.Data.Migrations
 
             modelBuilder.Entity("CodecoolAPI.Data.Entries.Author", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("AuthorId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AuthorId"), 1L, 1);
 
                     b.Property<int>("Counter")
                         .HasColumnType("int");
@@ -48,20 +48,24 @@ namespace CodecoolAPI.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.HasKey("AuthorId");
+
+                    b.HasIndex("Username")
+                        .IsUnique()
+                        .HasFilter("[Username] IS NOT NULL");
 
                     b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("CodecoolAPI.Data.Entries.Material", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("MaterialId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaterialId"), 1L, 1);
 
                     b.Property<int>("AuthorId")
                         .HasColumnType("int");
@@ -81,7 +85,7 @@ namespace CodecoolAPI.Data.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("MaterialId");
 
                     b.HasIndex("AuthorId");
 
@@ -92,30 +96,37 @@ namespace CodecoolAPI.Data.Migrations
 
             modelBuilder.Entity("CodecoolAPI.Data.Entries.MaterialType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("MaterialTypeId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaterialTypeId"), 1L, 1);
 
                     b.Property<string>("Definition")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.HasKey("MaterialTypeId");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
                     b.ToTable("MaterialTypes");
                 });
 
             modelBuilder.Entity("CodecoolAPI.Data.Entries.Review", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ReviewId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReviewId"), 1L, 1);
+
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("int");
 
                     b.Property<int>("MaterialId")
                         .HasColumnType("int");
@@ -123,10 +134,12 @@ namespace CodecoolAPI.Data.Migrations
                     b.Property<int>("RevievPoints")
                         .HasColumnType("int");
 
-                    b.Property<string>("RewievTExt")
+                    b.Property<string>("RewievText")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ReviewId");
+
+                    b.HasIndex("AuthorId");
 
                     b.HasIndex("MaterialId");
 
@@ -154,11 +167,19 @@ namespace CodecoolAPI.Data.Migrations
 
             modelBuilder.Entity("CodecoolAPI.Data.Entries.Review", b =>
                 {
+                    b.HasOne("CodecoolAPI.Data.Entries.Author", "Author")
+                        .WithMany("Reviews")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("CodecoolAPI.Data.Entries.Material", "Material")
                         .WithMany("Rewievs")
                         .HasForeignKey("MaterialId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Author");
 
                     b.Navigation("Material");
                 });
@@ -166,6 +187,8 @@ namespace CodecoolAPI.Data.Migrations
             modelBuilder.Entity("CodecoolAPI.Data.Entries.Author", b =>
                 {
                     b.Navigation("Materials");
+
+                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("CodecoolAPI.Data.Entries.Material", b =>
