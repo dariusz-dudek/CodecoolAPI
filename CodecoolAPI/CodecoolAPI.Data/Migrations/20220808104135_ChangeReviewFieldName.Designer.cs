@@ -4,6 +4,7 @@ using CodecoolAPI.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodecoolAPI.Data.Migrations
 {
     [DbContext(typeof(CodecoolAPIContext))]
-    partial class CodecoolAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20220808104135_ChangeReviewFieldName")]
+    partial class ChangeReviewFieldName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

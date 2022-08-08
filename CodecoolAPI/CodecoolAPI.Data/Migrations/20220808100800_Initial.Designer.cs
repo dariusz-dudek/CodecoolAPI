@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodecoolAPI.Data.Migrations
 {
     [DbContext(typeof(CodecoolAPIContext))]
-    [Migration("20220808100115_Initial")]
+    [Migration("20220808100800_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
